@@ -1,4 +1,3 @@
-
 config.forEach(function (configuracoes) {
   configuracoes.listaMensagens = [];
   configuracoes.nomeDaPessoa = '';
@@ -9,8 +8,20 @@ class App extends React.Component {
     numberOfScreens: config.length,
     lastId: 0,
     data: {},
-    serverResponse: {}
+    serverResponse: {},
+    modalAberto: false,
+    motivo: '',
+    nomeDaPessoa: ''
   }
+
+  handleChange = (event) => {
+    const { name, value } = event.target
+
+    this.setState({ [name]: value })
+  }
+
+  abrirModal = () => this.setState({ modalAberto: true })
+  fecharModal = () => this.setState({ modalAberto: false })
 
   renderizarTela = (configuracao, autorizacaoManual = false, motivo) => {
     const date = new Date()
@@ -55,7 +66,9 @@ class App extends React.Component {
             {serverResponse.usuarioNome.toUpperCase()}
           </a>
 
-          <br />
+          {
+            serverResponse.msgRecepcao && <br/>
+          }
 
           {
             serverResponse.msgRecepcao
@@ -64,7 +77,11 @@ class App extends React.Component {
           }
 
           {
-            motivo ? `Motivo Liberação: ${motivo}` : ''
+            serverResponse.motivoLiberacaoManual && <br/>
+          }
+          
+          {
+            serverResponse.motivoLiberacaoManual && `Motivo Liberação: ${serverResponse.motivoLiberacaoManual}`
           }
         </p>
       )
@@ -72,17 +89,26 @@ class App extends React.Component {
   }
 
   handleClick = () => {
-    const motivo = prompt('Qual o motivo da liberação?')
-
-    fetch(`http://${hostnameDoServidor}:${portaDoServidor}/servidorCatracaIF/liberar/logCatraca/${this.state.data.id}`)
+    fetch(
+      `http://${hostnameDoServidor}:${portaDoServidor}/servidorCatracaIF/liberar/logCatraca/${this.state.data.id}`,
+      {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          motivo: this.state.motivo,
+          nomeDaPessoa: this.state.nomeDaPessoa
+        })
+      }
+    )
       .then(res => res.json())
       .then(data => {
         this.setState({
           data,
           serverResponse: JSON.parse(data.liberaCatracaComando)
         }, () => {
+          console.log(this.state)
           config.forEach(configuracao => {
-            this.renderizarTela(configuracao, true, motivo)
+            this.renderizarTela(configuracao, true)
             this.setState(this.state)
           })
         })
@@ -114,17 +140,20 @@ class App extends React.Component {
             .catch(error => console.log(error))
         })
         .catch(error => console.log(error))
-    }, 500)
+    }, 1500)
   }
 
   render() {
-    const { data, numberOfScreens } = this.state
+    const { data, numberOfScreens, lastId } = this.state
 
     if (!data) {
       return <p>Carregando...</p>
     } else {
       return (
-        <div className="flex-parent">
+        <div
+          className="flex-parent"
+          style={{ backgroundColor: this.state.modalAberto ? 'black' : '' }}
+        >
           {config.map((screenConfig, index) => {
             // Definindo a posição do botão LIBERAR.
             let width
@@ -180,9 +209,63 @@ class App extends React.Component {
                     {screenConfig.texto}
                   </div>
 
-                  {!screenConfig.autorizado && (
+                  {
+                    this.state.modalAberto && (
+                      <div className="parent-modal">
+                        <div className="modal">
+                          <form>
+
+                            <p>Motivo da Liberação</p>
+                            <select
+                              name="motivo"
+                              onChange={this.handleChange}
+                              defaultValue={""}
+                              required
+                            >
+                              <option disabled value="">Selecione Um Valor</option>
+                              {motivosDeLiberacao.map(motivo => (
+                                <option value={motivo}>{motivo}</option>
+                              ))}
+                            </select>
+                            <br />
+
+                            <p
+                              style={{ marginTop: '3%' }}
+                            >Nome da pessoa</p>
+                            <input
+                              type="text"
+                              onChange={this.handleChange}
+                              value={this.state.nomeDaPessoa}
+                              name="nomeDaPessoa"
+                            />
+                            <br />
+                            <button
+                              style={{
+                                padding: '.5rem 1rem',
+                                backgroundColor: 'green',
+                                border: '1px solid yellow',
+                                color: 'white',
+                                fontSize: 15,
+                                borderRadius: 10
+                              }}
+                              type="submit"
+                              onClick={(event) => {
+                                event.preventDefault()
+                                this.handleClick()
+                                this.fecharModal()
+                              }}
+                            >
+                              Liberar</button>
+                          </form>
+                        </div>
+                      </div>
+                    )
+                  }
+
+
+                  {!screenConfig.autorizado && screenConfig.nomeDaPessoa && (
                     <button
-                      onClick={this.handleClick}
+                      onClick={this.abrirModal}
                       className="access-control__button"
                       style={{
                         border: `1px solid ${screenConfig.corDaBorda}`,
@@ -214,7 +297,7 @@ class App extends React.Component {
                     style={{
                       color: 'yellow',
                     }}
-                    onClick={() => this.handleAuthorize(screenConfig)}
+                    onClick={this.abrirModal}
                   >
                     Liberar {screenConfig.titulo}
                   </button>
