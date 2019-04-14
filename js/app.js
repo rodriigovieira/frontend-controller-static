@@ -67,7 +67,7 @@ class App extends React.Component {
           </a>
 
           {
-            serverResponse.msgRecepcao && <br/>
+            serverResponse.msgRecepcao && <br />
           }
 
           {
@@ -77,9 +77,9 @@ class App extends React.Component {
           }
 
           {
-            serverResponse.motivoLiberacaoManual && <br/>
+            serverResponse.motivoLiberacaoManual && <br />
           }
-          
+
           {
             serverResponse.motivoLiberacaoManual && `Motivo Liberação: ${serverResponse.motivoLiberacaoManual}`
           }
@@ -159,7 +159,9 @@ class App extends React.Component {
             let width
             if (numberOfScreens === 2) width = 30 + (50 * index)
             if (numberOfScreens === 3) width = 13 + (33 * index)
-            if (numberOfScreens === 4) width = 7 + (25 * index)
+            if (numberOfScreens === 4) width = 8 + (25 * index)
+
+            width = `${width}vw`
 
             return (
               <div
@@ -192,6 +194,14 @@ class App extends React.Component {
 
                   <div className="access-control__name"
                     style={{
+                      position: 'absolute',
+                      top: '7vh',
+                      left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
+                      marginRight: '-50%',
+                      transform: 'translate(-50%, -50%)',
+                      fontSize: numberOfScreens === 2
+                        ? screenConfig.tamanhoDaFonte * 1.1
+                        : screenConfig.tamanhoDaFonte * 0.8,
                       color: `${screenConfig.autorizado
                         ? screenConfig.corSucesso : screenConfig.corFracasso}`
                     }}
@@ -201,6 +211,14 @@ class App extends React.Component {
 
                   <div
                     style={{
+                      position: 'absolute',
+                      top: '13vh',
+                      left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
+                      marginRight: '-50%',
+                      transform: 'translate(-50%, -50%)',
+                      fontSize: numberOfScreens === 2
+                        ? screenConfig.tamanhoDaFonte * 1.1
+                        : screenConfig.tamanhoDaFonte * 0.8,
                       color: `${screenConfig.autorizado
                         ? screenConfig.corSucesso : screenConfig.corFracasso}`
                     }}
@@ -214,7 +232,6 @@ class App extends React.Component {
                       <div className="parent-modal">
                         <div className="modal">
                           <form>
-
                             <p>Motivo da Liberação</p>
                             <select
                               name="motivo"
@@ -246,7 +263,8 @@ class App extends React.Component {
                                 border: '1px solid yellow',
                                 color: 'white',
                                 fontSize: 15,
-                                borderRadius: 10
+                                borderRadius: 10,
+                                marginTop: '1%'
                               }}
                               type="submit"
                               onClick={(event) => {
@@ -257,6 +275,22 @@ class App extends React.Component {
                             >
                               Liberar</button>
                           </form>
+
+                          <button
+                            onClick={this.fecharModal}
+                            style={{
+                              position: 'absolute',
+                              top: '3vh',
+                              left: '27vw',
+                              padding: 0,
+                              margin: 0,
+                              border: 'none',
+                              color: 'inherit',
+                              fontSize: 30,
+                              cursor: 'pointer'
+                            }}
+                          >
+                            X</button>
                         </div>
                       </div>
                     )
@@ -271,8 +305,9 @@ class App extends React.Component {
                         border: `1px solid ${screenConfig.corDaBorda}`,
                         fontSize: screenConfig.tamanhoDaFonte,
                         position: 'absolute',
+                        padding: numberOfScreens == 4 ? '10px 40px' : '10px 70px',
                         top: '22vh',
-                        left: `${width}vw`
+                        left: width
                       }}
                     >
                       LIBERAR

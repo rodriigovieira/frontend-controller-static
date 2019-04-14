@@ -45,7 +45,7 @@
       }
 
       .access-control__photo img {
-        width: 13vw;
+        width: 10vw;
       }
 
       .access-control__title {
@@ -53,23 +53,6 @@
         text-align: center;
         border-bottom: 1px solid yellow;
       }
-
-      .access-control__name {
-        /* font-size: 2rem; */
-        margin: 3%;
-        margin-left: 15vw;
-        margin-top: -25%;
-        text-align: center;
-      }
-
-      .access-control__text {
-        /* font-size: 2.5rem; */
-        margin: 3%;
-        margin-left: 15vw;
-        margin-top: 3%;
-        text-align: center;
-      }
-
       .access-control__button {
         padding: 10px 70px;
         color: white;
@@ -79,11 +62,9 @@
 
       .output-message {
         height: 65vh;
-        /* padding: 2rem 2rem 28rem 2rem; */
         padding: 2rem;
         overflow-y: scroll;
         border: 1px solid yellow;
-        /* font-size: 2rem; */
       }
 
       .status-bar {

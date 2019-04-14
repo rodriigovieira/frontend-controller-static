@@ -23,7 +23,7 @@ config = [
     filtro: ['catraca1'],
   },
   {
-    titulo: "Catraca Principal",
+    titulo: "Catraca Emergencial",
     corDaBorda: 'yellow',
     fonte: 'Arial',
     tamanhoDaFonte: 20,
@@ -32,14 +32,4 @@ config = [
     corFracasso: 'red',
     filtro: ['catraca1', 'catraca2'],
   },
-  {
-    titulo: "Catraca Secundária",
-    corDaBorda: 'yellow',
-    fonte: 'Arial',
-    tamanhoDaFonte: 20,
-    corDoFundo: 'black',
-    corSucesso: 'green',
-    corFracasso: 'red',
-    filtro: ['catraca2','fitpoit'],
-  }
 ]
