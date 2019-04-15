@@ -2,16 +2,36 @@
 
 // Configurações para conectar-se ao servidor.
 hostnameDoServidor = 'localhost' // NÃO COLOCAR A "/" NO FINAL!
-portaDoServidor = 810 // NÃO COLOCAR OS ":" NO COMEÇO!
+portaDoServidor = 4000 // NÃO COLOCAR OS ":" NO COMEÇO!
 enderecoDoCliente = 'http://enderecodocliente.com/?usuarioId=XXX'
-// Configuração liberação identificada
-endpoit_lib_identificada = 'http://localhost/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=S&sentidoAntiHorarioLiberado=S&liberacaoTempo=10000&texto=LIBERADO'
 
-// Para criar uma nova tela, basta adicionar uma nova configuração,
-// e nela adicionar o valor "título" com o nome que deseja.
+// Adicione aqui todos os motivos de liberação
+// que devem ser exibidos na hora de liberar manualmente.
 motivosDeLiberacao = ['Pagamento em atraso', 'Aula Experimental']
 
+// Configuração dos botões na barra inferior.
+// Para adicionar um novo botão, basta adicionar um novo objeto.
+configuracoesStatusBar = [
+  {
+    titulo: "Liberar Catrata 1",
+    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+  },
+  {
+    titulo: "Autorizar Catrata 47",
+    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+  },
+  {
+    titulo: "Liberar Catrata 131",
+    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+  },
+  {
+    titulo: "Liberar Catraca 2",
+    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+  }
+]
+
 // Configurações individuais de cada tela.
+// Para criar uma nova tela, basta adicionar um novo objeto.
 // Quanto maior o número de telas, recomenda-se que menor seja a fonte.
 config = [
   {
@@ -23,6 +43,7 @@ config = [
     corSucesso: 'green',
     corFracasso: 'red',
     filtro: ['catraca1'],
+    endpoint_lib_identificada: 'http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO'
   },
   {
     titulo: "Catraca Emergencial",
@@ -33,5 +54,6 @@ config = [
     corSucesso: 'green',
     corFracasso: 'red',
     filtro: ['catraca1', 'catraca2'],
+    endpoint_lib_identificada: 'http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO'
   },
 ]
