@@ -2,8 +2,10 @@
 
 // Configurações para conectar-se ao servidor.
 hostnameDoServidor = 'localhost' // NÃO COLOCAR A "/" NO FINAL!
-portaDoServidor = 4000 // NÃO COLOCAR OS ":" NO COMEÇO!
+portaDoServidor = 810 // NÃO COLOCAR OS ":" NO COMEÇO!
 enderecoDoCliente = 'http://enderecodocliente.com/?usuarioId=XXX'
+// Configuração liberação identificada
+endpoit_lib_identificada = 'http://localhost/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=S&sentidoAntiHorarioLiberado=S&liberacaoTempo=10000&texto=LIBERADO'
 
 // Para criar uma nova tela, basta adicionar uma nova configuração,
 // e nela adicionar o valor "título" com o nome que deseja.
