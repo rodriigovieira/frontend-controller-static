@@ -11,7 +11,8 @@ class App extends React.Component {
     serverResponse: {},
     modalAberto: false,
     motivo: '',
-    nomeDaPessoa: ''
+    nomeDaPessoa: '',
+    endpoint_URL: ''
   }
 
   handleChange = (event) => {
@@ -46,20 +47,22 @@ class App extends React.Component {
 
       configuracao.listaMensagens.unshift(
         <p style={style}>
-          {time} -
-                      <a
+          {time} -&nbsp;
+          <a
+            target="_blank"
             style={{
               color: 'inherit',
-              textDecoration: 'none'
+              textDecoration: 'underline'
             }}
             href={enderecoDoCliente}
           >
             {serverResponse.usuarioId}
-          </a>
+          </a>&nbsp;
           - <a
+            target="_blank"
             style={{
               color: 'inherit',
-              textDecoration: 'none'
+              textDecoration: 'underline'
             }}
             href={enderecoDoCliente}
           >
@@ -88,25 +91,98 @@ class App extends React.Component {
     }
   }
 
-  handleClick = () => {
-    fetch(
-      `http://${hostnameDoServidor}:${portaDoServidor}/servidorCatracaIF/liberar/logCatraca/${this.state.data.id}`,
-      {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          motivo: this.state.motivo,
-          nomeDaPessoa: this.state.nomeDaPessoa
-        })
-      }
+  renderizarModal = () => {
+    return (
+      <div className="parent-modal">
+        <div className="modal">
+          <form>
+            <p>Motivo da Liberação</p>
+            <select
+              name="motivo"
+              onChange={this.handleChange}
+              defaultValue={""}
+              required
+            >
+              <option disabled value="">Selecione Um Valor</option>
+              {motivosDeLiberacao.map(motivo => (
+                <option value={motivo}>{motivo}</option>
+              ))}
+            </select>
+            <br />
+
+            <p
+              style={{ marginTop: '3%' }}
+            >Nome da pessoa</p>
+            <input
+              type="text"
+              onChange={this.handleChange}
+              value={this.state.nomeDaPessoa}
+              name="nomeDaPessoa"
+            />
+            <br />
+            <button
+              style={{
+                padding: '.5rem 1rem',
+                backgroundColor: 'green',
+                border: '1px solid yellow',
+                color: 'white',
+                fontSize: 15,
+                borderRadius: 10,
+                marginTop: '1%',
+              }}
+              type="submit"
+              onClick={(event) => {
+                event.preventDefault()
+                this.autorizacaoComModal()
+                this.fecharModal()
+              }}
+            >
+              Liberar
+            </button>
+          </form>
+
+          <button
+            onClick={this.fecharModal}
+            style={{
+              position: 'absolute',
+              top: '3vh',
+              left: '27vw',
+              padding: 0,
+              margin: 0,
+              border: 'none',
+              color: 'inherit',
+              fontSize: 30,
+              cursor: 'pointer'
+            }}
+          >
+            X</button>
+        </div>
+      </div>
     )
-      .then(res => res.json())
-      .then(data => {
+  }
+
+  autorizacaoSemModal = (endpoint_URL) => {
+    fetch(endpoint_URL)
+      .then(primeiraRes => primeiraRes.json())
+      .then(res => {
         this.setState({
-          data,
-          serverResponse: JSON.parse(data.liberaCatracaComando)
+          data: res,
+          serverResponse: JSON.parse(res.liberaCatracaComando)
         }, () => {
-          console.log(this.state)
+          config.forEach(configuracao => this.renderizarTela(configuracao, true))
+          this.setState(this.state)
+        })
+      })
+  }
+
+  autorizacaoComModal = () => {
+    fetch(this.state.endpoint_URL)
+      .then(primeiroRes => primeiroRes.json())
+      .then(res => {
+        this.setState({
+          data: res,
+          serverResponse: JSON.parse(res.liberaCatracaComando)
+        }, () => {
           config.forEach(configuracao => {
             this.renderizarTela(configuracao, true)
             this.setState(this.state)
@@ -150,198 +226,139 @@ class App extends React.Component {
       return <p>Carregando...</p>
     } else {
       return (
-        <div
-          className="flex-parent"
-          style={{ backgroundColor: this.state.modalAberto ? 'black' : '' }}
-        >
-          {config.map((screenConfig, index) => {
-            // Definindo a posição do botão LIBERAR.
-            let width
-            if (numberOfScreens === 2) width = 30 + (50 * index)
-            if (numberOfScreens === 3) width = 13 + (33 * index)
-            if (numberOfScreens === 4) width = 8 + (25 * index)
+        <React.Fragment>
+          <div
+            className="flex-parent"
+            style={{ backgroundColor: this.state.modalAberto ? 'black' : '' }}
+          >
+            {config.map((screenConfig, index) => {
+              // Definindo a posição do botão LIBERAR.
+              let width
+              if (numberOfScreens === 2) width = 30 + (50 * index)
+              if (numberOfScreens === 3) width = 13 + (33 * index)
+              if (numberOfScreens === 4) width = 8 + (25 * index)
 
-            width = `${width}vw`
+              width = `${width}vw`
 
-            return (
-              <div
-                style={{
-                  fontFamily: `"${screenConfig.fonte}", sans-serif`,
-                  fontSize: screenConfig.tamanhoDaFonte,
-                  backgroundColor: screenConfig.corDoFundo
-                }}
-              >
+              return (
                 <div
-                  className="access-control"
                   style={{
-                    width: `calc(99.9vw / ${numberOfScreens}`,
-                    border: `1px solid ${screenConfig.corDaBorda}`
-                  }}
-                >
-                  <div
-                    className="access-control__title"
-                    style={{
-                      width: `calc(99.9vw / ${numberOfScreens}`,
-                      border: `1px solid ${screenConfig.corDaBorda}`,
-                      fontSize: screenConfig.tamanhoDaFonte
-                    }}
-                  >
-                    <p>{screenConfig.titulo}</p>
-                  </div>
-                  <div className="access-control__photo">
-                    <img src="./profile.png" alt="Foto" />
-                  </div>
-
-                  <div className="access-control__name"
-                    style={{
-                      position: 'absolute',
-                      top: '7vh',
-                      left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
-                      marginRight: '-50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: numberOfScreens === 2
-                        ? screenConfig.tamanhoDaFonte * 1.1
-                        : screenConfig.tamanhoDaFonte * 0.8,
-                      color: `${screenConfig.autorizado
-                        ? screenConfig.corSucesso : screenConfig.corFracasso}`
-                    }}
-                  >
-                    <p>{screenConfig.nomeDaPessoa.toUpperCase()}</p>
-                  </div>
-
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '13vh',
-                      left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
-                      marginRight: '-50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: numberOfScreens === 2
-                        ? screenConfig.tamanhoDaFonte * 1.1
-                        : screenConfig.tamanhoDaFonte * 0.8,
-                      color: `${screenConfig.autorizado
-                        ? screenConfig.corSucesso : screenConfig.corFracasso}`
-                    }}
-                    className="access-control__text"
-                  >
-                    {screenConfig.texto}
-                  </div>
-
-                  {
-                    this.state.modalAberto && (
-                      <div className="parent-modal">
-                        <div className="modal">
-                          <form>
-                            <p>Motivo da Liberação</p>
-                            <select
-                              name="motivo"
-                              onChange={this.handleChange}
-                              defaultValue={""}
-                              required
-                            >
-                              <option disabled value="">Selecione Um Valor</option>
-                              {motivosDeLiberacao.map(motivo => (
-                                <option value={motivo}>{motivo}</option>
-                              ))}
-                            </select>
-                            <br />
-
-                            <p
-                              style={{ marginTop: '3%' }}
-                            >Nome da pessoa</p>
-                            <input
-                              type="text"
-                              onChange={this.handleChange}
-                              value={this.state.nomeDaPessoa}
-                              name="nomeDaPessoa"
-                            />
-                            <br />
-                            <button
-                              style={{
-                                padding: '.5rem 1rem',
-                                backgroundColor: 'green',
-                                border: '1px solid yellow',
-                                color: 'white',
-                                fontSize: 15,
-                                borderRadius: 10,
-                                marginTop: '1%'
-                              }}
-                              type="submit"
-                              onClick={(event) => {
-                                event.preventDefault()
-                                this.handleClick()
-                                this.fecharModal()
-                              }}
-                            >
-                              Liberar</button>
-                          </form>
-
-                          <button
-                            onClick={this.fecharModal}
-                            style={{
-                              position: 'absolute',
-                              top: '3vh',
-                              left: '27vw',
-                              padding: 0,
-                              margin: 0,
-                              border: 'none',
-                              color: 'inherit',
-                              fontSize: 30,
-                              cursor: 'pointer'
-                            }}
-                          >
-                            X</button>
-                        </div>
-                      </div>
-                    )
-                  }
-
-
-                  {!screenConfig.autorizado && screenConfig.nomeDaPessoa && (
-                    <button
-                      onClick={this.abrirModal}
-                      className="access-control__button"
-                      style={{
-                        border: `1px solid ${screenConfig.corDaBorda}`,
-                        fontSize: screenConfig.tamanhoDaFonte,
-                        position: 'absolute',
-                        padding: numberOfScreens == 4 ? '10px 40px' : '10px 70px',
-                        top: '22vh',
-                        left: width
-                      }}
-                    >
-                      LIBERAR
-                </button>
-                  )}
-                </div>
-
-                <div
-                  className="output-message"
-                  style={{
-                    border: `1px solid ${screenConfig.corDaBorda}`,
+                    fontFamily: `"${screenConfig.fonte}", sans-serif`,
+                    fontSize: screenConfig.tamanhoDaFonte,
                     backgroundColor: screenConfig.corDoFundo
                   }}
                 >
-                  {screenConfig.listaMensagens.map(mensagem => <div>{mensagem}</div>)}
-                </div>
-                <div
-                  className="status-bar"
-                  style={{ width: `calc(99.9vw) / ${numberOfScreens}` }}
-                >
-                  <button
+                  <div
+                    className="access-control"
                     style={{
-                      color: 'yellow',
+                      width: `calc(99.9vw / ${numberOfScreens}`,
+                      border: `1px solid ${screenConfig.corDaBorda}`
                     }}
-                    onClick={this.abrirModal}
                   >
-                    Liberar {screenConfig.titulo}
-                  </button>
-                </div>
-              </div>
-            )
-          })}
+                    <div
+                      className="access-control__title"
+                      style={{
+                        width: `calc(99.9vw / ${numberOfScreens}`,
+                        border: `1px solid ${screenConfig.corDaBorda}`,
+                        fontSize: screenConfig.tamanhoDaFonte
+                      }}
+                    >
+                      <p>{screenConfig.titulo}</p>
+                    </div>
+                    <div className="access-control__photo">
+                      <img src="./profile.png" alt="Foto" />
+                    </div>
 
-        </div>
+                    <div className="access-control__name"
+                      style={{
+                        position: 'absolute',
+                        top: '7vh',
+                        left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
+                        marginRight: '-50%',
+                        transform: 'translate(-50%, -50%)',
+                        fontSize: numberOfScreens === 2
+                          ? screenConfig.tamanhoDaFonte * 1.1
+                          : screenConfig.tamanhoDaFonte * 0.8,
+                        color: `${screenConfig.autorizado
+                          ? screenConfig.corSucesso : screenConfig.corFracasso}`
+                      }}
+                    >
+                      <p>{screenConfig.nomeDaPessoa.toUpperCase()}</p>
+                    </div>
+
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: '13vh',
+                        left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
+                        marginRight: '-50%',
+                        transform: 'translate(-50%, -50%)',
+                        fontSize: numberOfScreens === 2
+                          ? screenConfig.tamanhoDaFonte * 1.1
+                          : screenConfig.tamanhoDaFonte * 0.8,
+                        color: `${screenConfig.autorizado
+                          ? screenConfig.corSucesso : screenConfig.corFracasso}`
+                      }}
+                      className="access-control__text"
+                    >
+                      {screenConfig.texto}
+                    </div>
+
+
+                    {!screenConfig.autorizado && screenConfig.nomeDaPessoa && (
+                      <button
+                        onClick={() => this.autorizacaoSemModal(screenConfig.endpoint_lib_identificada)}
+                        className="access-control__button"
+                        style={{
+                          border: `1px solid ${screenConfig.corDaBorda}`,
+                          fontSize: screenConfig.tamanhoDaFonte,
+                          position: 'absolute',
+                          padding: numberOfScreens == 4 ? '10px 40px' : '10px 70px',
+                          top: '22vh',
+                          left: width
+                        }}
+                      >
+                        LIBERAR
+                </button>
+                    )}
+                  </div>
+                  {
+                    this.state.modalAberto && this.renderizarModal()
+                  }
+
+                  <div
+                    className="output-message"
+                    style={{
+                      border: `1px solid ${screenConfig.corDaBorda}`,
+                      backgroundColor: screenConfig.corDoFundo
+                    }}
+                  >
+                    {screenConfig.listaMensagens.map(mensagem => <div>{mensagem}</div>)}
+                  </div>
+                </div>
+              )
+            })}
+
+          </div>
+          <div
+            className="status-bar"
+            style={{
+              width: `calc(99.9vw) / ${numberOfScreens}`,
+              fontSize: 16
+            }}
+          >
+            {configuracoesStatusBar.map(configuracao => (
+              <button
+                onClick={() => {
+                  this.abrirModal()
+                  this.setState({ endpoint_URL: configuracao.endpoint })
+                }}
+              >
+                {configuracao.titulo}
+              </button>
+            ))}
+          </div>
+        </React.Fragment>
       )
     }
   }
