@@ -119,12 +119,12 @@ class App extends React.Component {
     setInterval(() => {
       fetch(`http://${hostnameDoServidor}:${portaDoServidor}/servidorCatracaIF/logCatraca/ultimoId`)
         .then(res => res.json())
-        .then(lastId => {
-          if (this.state.lastId === lastId) {
+        .then(r => {
+          if (this.state.lastId === r.result) {
             return null
           }
 
-          fetch(`http://${hostnameDoServidor}:${portaDoServidor}/servidorCatracaIF/logCatraca/${lastId}`)
+          fetch(`http://${hostnameDoServidor}:${portaDoServidor}/servidorCatracaIF/logCatraca/${r.result}`)
             .then(res => res.json())
             .then(data => {
               this.setState({
@@ -134,7 +134,7 @@ class App extends React.Component {
                 config.forEach(configuracao => {
                   this.renderizarTela(configuracao)
                 })
-                this.setState({ lastId })
+                this.setState({ lastId: r.result })
               })
             })
             .catch(error => console.log(error))
