@@ -7,7 +7,7 @@ class App extends React.Component {
   state = {
     numberOfScreens: config.length,
     lastId: 0,
-    data: {},
+    data: {}, 
     serverResponse: {},
     modalAberto: false,
     motivo: '',
@@ -235,7 +235,7 @@ class App extends React.Component {
               // Definindo a posição do botão LIBERAR.
               let width
               if (numberOfScreens === 2) width = 30 + (50 * index)
-              if (numberOfScreens === 3) width = 13 + (33 * index)
+              if (numberOfScreens === 3) width = 16 + (33 * index)
               if (numberOfScreens === 4) width = 8 + (25 * index)
 
               width = `${width}vw`
@@ -273,7 +273,7 @@ class App extends React.Component {
                       style={{
                         position: 'absolute',
                         top: '7vh',
-                        left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
+                        left: numberOfScreens === 2 ? width : `calc(${width} + 7vw)`,
                         marginRight: '-50%',
                         transform: 'translate(-50%, -50%)',
                         fontSize: numberOfScreens === 2
@@ -290,7 +290,7 @@ class App extends React.Component {
                       style={{
                         position: 'absolute',
                         top: '13vh',
-                        left: numberOfScreens === 2 ? width : `calc(${width} + 10vw)`,
+                        left: numberOfScreens === 2 ? width : `calc(${width} + 7vw)`,
                         marginRight: '-50%',
                         transform: 'translate(-50%, -50%)',
                         fontSize: numberOfScreens === 2
@@ -313,9 +313,9 @@ class App extends React.Component {
                           border: `1px solid ${screenConfig.corDaBorda}`,
                           fontSize: screenConfig.tamanhoDaFonte,
                           position: 'absolute',
-                          padding: numberOfScreens == 4 ? '10px 40px' : '10px 70px',
+                          padding: numberOfScreens == 4 ? '1.3vh 4vw' : '1.3vh 6vw',
                           top: '22vh',
-                          left: width
+                          left: `calc(${width} - 3vw)`,
                         }}
                       >
                         LIBERAR
@@ -350,8 +350,8 @@ class App extends React.Component {
             {configuracoesStatusBar.map(configuracao => (
               <button
                 onClick={() => {
-                  this.abrirModal()
                   this.setState({ endpoint_URL: configuracao.endpoint })
+                  this.abrirModal()
                 }}
               >
                 {configuracao.titulo}

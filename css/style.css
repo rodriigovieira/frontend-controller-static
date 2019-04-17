@@ -52,8 +52,9 @@
         text-align: center;
         border-bottom: 1px solid yellow;
       }
+
       .access-control__button {
-        padding: 10px 70px;
+        padding: 10px 6vh;
         color: white;
         background-color: green;
         border-radius: 15px;
