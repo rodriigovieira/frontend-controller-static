@@ -7,12 +7,13 @@ class App extends React.Component {
   state = {
     numberOfScreens: config.length,
     lastId: 0,
-    data: {}, 
+    data: {},
     serverResponse: {},
     modalAberto: false,
     motivo: '',
     nomeDaPessoa: '',
-    endpoint_URL: ''
+    endpoint_URL: '',
+    photo_base64: ""
   }
 
   handleChange = (event) => {
@@ -31,7 +32,7 @@ class App extends React.Component {
       minute: '2-digit'
     })
 
-    if (configuracao.filtro.includes(this.state.serverResponse.nomeCatraca.toLowerCase())) {
+    if (configuracao.filtro.includes(this.state.serverResponse && this.state.serverResponse.nomeCatraca.toLowerCase())) {
       const { serverResponse } = this.state
 
       const style = {
@@ -199,13 +200,22 @@ class App extends React.Component {
           if (this.state.lastId === r.result) {
             return null
           }
-
+          
           fetch(`http://${hostnameDoServidor}:${portaDoServidor}/servidorCatracaIF/logCatraca/${r.result}`)
-            .then(res => res.json())
-            .then(data => {
+          .then(res => res.json())
+          .then(data => {
+            if (data.identificacao_usuarioId) {
+              fetch(`http://192.168.0.109:810/servidorCatracaIF/cachePgProcessamento/fotoJpgBase64UsuarioId?usuarioId=${data.identificacao_usuarioId}`)
+                .then(r => r.json())
+                .then(res => this.setState({ photo_base64: res.result }))
+                .catch((e) => console.log(e))
+            } else {
+              this.setState({ photo_base64: '' })
+            }
+
               this.setState({
                 data,
-                serverResponse: JSON.parse(data.liberaCatracaComando)
+                serverResponse: data.liberaCatracaComando ? JSON.parse(data.liberaCatracaComando) : ''
               }, () => {
                 config.forEach(configuracao => {
                   this.renderizarTela(configuracao)
@@ -220,7 +230,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { data, numberOfScreens, lastId } = this.state
+    const { data, numberOfScreens, lastId, photo_base64 } = this.state
 
     if (!data) {
       return <p>Carregando...</p>
@@ -239,6 +249,9 @@ class App extends React.Component {
               if (numberOfScreens === 4) width = 8 + (25 * index)
 
               width = `${width}vw`
+
+              // Definindo se o usuário possui imagem ou não
+              const foto = photo_base64 ? `data:image/png;base64, ${photo_base64}` : "./sem_foto.png"
 
               return (
                 <div
@@ -266,7 +279,7 @@ class App extends React.Component {
                       <p>{screenConfig.titulo}</p>
                     </div>
                     <div className="access-control__photo">
-                      <img src="./profile.png" alt="Foto" />
+                      <img src={foto} alt="Foto" />
                     </div>
 
                     <div className="access-control__name"
@@ -303,7 +316,6 @@ class App extends React.Component {
                     >
                       {screenConfig.texto}
                     </div>
-
 
                     {!screenConfig.autorizado && screenConfig.nomeDaPessoa && (
                       <button
