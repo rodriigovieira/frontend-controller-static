@@ -14,19 +14,23 @@ motivosDeLiberacao = ['Pagamento em atraso', 'Aula Experimental']
 configuracoesStatusBar = [
   {
     titulo: "Liberar Catrata 1",
-    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+    endpoint: "http://localhost:4000/metodos/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO",
+    filtro: 'catraca1'
   },
   {
     titulo: "Autorizar Catrata 47",
-    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+    endpoint: "http://localhost:4000/metodos/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO",
+    filtro: 'catraca1'
   },
   {
     titulo: "Liberar Catrata 131",
-    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+    endpoint: "http://localhost:4000/metodos/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO",
+    filtro: 'catraca1'
   },
   {
     titulo: "Liberar Catraca 2",
-    endpoint: "http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO"
+    endpoint: "http://localhost:4000/metodos/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO",
+    filtro: 'catraca1'
   }
 ]
 
@@ -43,7 +47,7 @@ config = [
     corSucesso: 'green',
     corFracasso: 'red',
     filtro: ['catraca1'],
-    endpoint_lib_identificada: 'http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO'
+    endpoint_lib_identificada: 'http://localhost:4000/metodos/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO'
   },
   {
     titulo: "Catraca Emergencial",
@@ -54,6 +58,6 @@ config = [
     corSucesso: 'green',
     corFracasso: 'red',
     filtro: ['catraca1', 'catraca2'],
-    endpoint_lib_identificada: 'http://localhost:4000/metodosCatraca/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO'
+    endpoint_lib_identificada: 'http://localhost:4000/metodos/liberaCatraca?sentidoHorarioLiberado=true&sentidoAntiHorarioLiberado=true&liberacaoTempo=10000&texto=LIBERADO'
   },
 ]
