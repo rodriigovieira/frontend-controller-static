@@ -2,7 +2,7 @@
 
 // Configurações para conectar-se ao servidor.
 hostnameDoServidor = 'localhost' // NÃO COLOCAR A "/" NO FINAL!
-portaDoServidor = 4000 // NÃO COLOCAR OS ":" NO COMEÇO!
+portaDoServidor = 810 // NÃO COLOCAR OS ":" NO COMEÇO!
 enderecoDoCliente = 'http://enderecodocliente.com/?usuarioId=XXX'
 
 // Adicione aqui todos os motivos de liberação
