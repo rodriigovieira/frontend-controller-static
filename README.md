@@ -1,7 +1,5 @@
 # Frontend Controladora
 
-Basta apenas baixar o projeto e abrir o index.html para poder começar o app.
+Para rodar o servidor, basta rodar em sua linha de comando `npm start`.
 
-OBS: abra no Firefox, pois o Chrome/Edge não permitem solicitações GET/POST vindas de arquivos abertos pelo sistema de arquivos local. Se possível, use algum programa para servir os arquivos (serve, live-server, apache, etc).
-
-Não se esqueça de configurar a porta/IP no arquivo `js/config/config.js`!
+A interface será exibida na porta 5000, podendo ser acessada através do endereço `localhost:5000`.`
