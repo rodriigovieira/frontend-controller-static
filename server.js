@@ -12,5 +12,5 @@ http.createServer(function (req, res) {
     if (err)
       console.log(err)
     else  
-      console.log('app runing on port 5000');
+      console.log('Interface sendo executada na porta 5000.');
 });
