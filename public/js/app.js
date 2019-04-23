@@ -207,7 +207,7 @@ class App extends React.Component {
   // You'll pass a STIRNGFIED JSON in the api CALL.
 
   autorizacaoSemModal = endpoint_URL => {
-    fetch(`${endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${this.state.serverResponse.usuarioNome}, "usuarioId": ${this.state.data.identificacao_usuarioId}, "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${this.state.serverResponse.msgRecepcao}, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": "", "nomeCatraca": "Catraca1", "motivoLiberacaoManual": "{\"liberadoPara\":${this.state.serverResponse.usuarioNome}",\"motivo\":${this.state.serverResponse.msgRecepcao}"}", "qtdAcessosPorDia": 0 }`)
+    fetch(`${endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${ this.state.serverResponse.usuarioNome }, "usuarioId": ${ this.state.identificacao_usuarioId }, "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${ this.state.serverResponse.msgRecepcao }, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": "", "nomeCatraca": "Catraca1", "motivoLiberacaoManual": "{\"liberadoPara\":\"${this.state.serverResponse.usuarioNome}\",\"motivo\": ${this.state.serverResponse.msgRecepcao}}", "qtdAcessosPorDia": 0, "temTimeZones": false, "msgBloqueioTimeZone": "", "gruposTimeZone": "", "intervaloMinimo": 0}'`)
       .then(primeiraRes => primeiraRes.json())
       .then(res => {
         console.log(res)
@@ -215,7 +215,7 @@ class App extends React.Component {
   }
 
   autorizacaoComModal = () => {
-    fetch(`${this.state.endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${this.state.nomeDaPessoa}, "usuarioId": "", "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${this.state.motivo}, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": "", "nomeCatraca": "Catraca1", "motivoLiberacaoManual": "{\"liberadoPara\":${this.state.nomeDaPessoa}",\"motivo\":${this.state.motivo}}", "qtdAcessosPorDia": 0 }`)
+    fetch(`${this.state.endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${ this.state.nomeDaPessoa }, "usuarioId": "", "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${ this.state.motivo }, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": "", "nomeCatraca": "Catraca1", "motivoLiberacaoManual": "{\"liberadoPara\":\"${this.state.nomeDaPessoa}\",\"motivo\": ${this.state.motivo}}", "qtdAcessosPorDia": 0, "temTimeZones": false, "msgBloqueioTimeZone": "", "gruposTimeZone": "", "intervaloMinimo": 0}'`)
       .then(primeiroRes => primeiroRes.json())
       .then(res => {
         console.log(res)
