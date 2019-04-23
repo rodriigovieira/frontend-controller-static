@@ -3,6 +3,15 @@ config.forEach(function (configuracoes) {
   configuracoes.nomeDaPessoa = ""
 })
 
+// Configuração do endereço do cliente.
+// Assim que configurar CPF/usuarioId.
+
+// if (enderecoDoCliente.includes('@CPF')) {
+//   enderecoDoCliente += `?CPF=${valorDoCPF}`
+// } else {
+//   enderecoDoCliente += `?usuarioId=${valorDoUsuarioId}`
+// }
+
 class App extends React.Component {
   state = {
     numberOfScreens: config.length,
@@ -14,7 +23,8 @@ class App extends React.Component {
     nomeDaPessoa: "",
     endpoint_URL: "",
     photo_base64: "",
-    filtroLiberaManual: ""
+    nomeDoDispositivoLiberaManual: "",
+    grupo: ""
   }
 
   handleChange = event => {
@@ -27,6 +37,8 @@ class App extends React.Component {
   fecharModal = () => this.setState({ modalAberto: false })
 
   renderizarTela = (configuracao, autorizacaoManual = false, motivo) => {
+    if (!this.state.serverResponse) return null;
+
     const date = new Date()
     const time = date.toLocaleTimeString(navigator.language, {
       hour: "2-digit",
@@ -41,6 +53,7 @@ class App extends React.Component {
     ) {
       const { serverResponse } = this.state
 
+
       const style = {
         color: `${
           serverResponse.sentidoHorarioLiberado ||
@@ -51,10 +64,16 @@ class App extends React.Component {
       }
 
       configuracao.nomeDaPessoa = serverResponse.usuarioNome.toUpperCase()
+      configuracao.esconderBotao = false
 
       configuracao.autorizado =
         serverResponse.sentidoHorarioLiberado ||
         serverResponse.sentidoAntiHorarioLiberado
+
+      setTimeout(() => {
+        configuracao.esconderBotao = true
+        this.setState(this.state)
+      }, configuracao.tempoParaBotaoDesaparecer)
 
       configuracao.texto = `${serverResponse.texto} ${
         autorizacaoManual ? "Manualmente" : ""
@@ -203,11 +222,8 @@ class App extends React.Component {
     )
   }
 
-  // Work on AUTHORIZE button.
-  // You'll pass a STIRNGFIED JSON in the api CALL.
-
   autorizacaoSemModal = endpoint_URL => {
-    fetch(`${endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${ this.state.serverResponse.usuarioNome }, "usuarioId": ${ this.state.identificacao_usuarioId }, "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${ this.state.serverResponse.msgRecepcao }, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": "", "nomeCatraca": "Catraca1", "motivoLiberacaoManual": "{\"liberadoPara\":\"${this.state.serverResponse.usuarioNome}\",\"motivo\": ${this.state.serverResponse.msgRecepcao}}", "qtdAcessosPorDia": 0, "temTimeZones": false, "msgBloqueioTimeZone": "", "gruposTimeZone": "", "intervaloMinimo": 0}'`)
+    fetch(`${endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${this.state.serverResponse.usuarioNome}, "usuarioId": ${this.state.identificacao_usuarioId}, "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${this.state.serverResponse.msgRecepcao}, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": ${this.state.serverResponse.grupoCatraca}, "nomeCatraca": ${this.state.serverResponse.nomeCatraca}, "motivoLiberacaoManual": "{\"liberadoPara\":\"${this.state.serverResponse.usuarioNome}\",\"motivo\": ${this.state.serverResponse.msgRecepcao}}", "qtdAcessosPorDia": 0, "temTimeZones": false, "msgBloqueioTimeZone": "", "gruposTimeZone": "", "intervaloMinimo": 0}'`)
       .then(primeiraRes => primeiraRes.json())
       .then(res => {
         console.log(res)
@@ -215,7 +231,7 @@ class App extends React.Component {
   }
 
   autorizacaoComModal = () => {
-    fetch(`${this.state.endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${ this.state.nomeDaPessoa }, "usuarioId": "", "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${ this.state.motivo }, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": "", "nomeCatraca": "Catraca1", "motivoLiberacaoManual": "{\"liberadoPara\":\"${this.state.nomeDaPessoa}\",\"motivo\": ${this.state.motivo}}", "qtdAcessosPorDia": 0, "temTimeZones": false, "msgBloqueioTimeZone": "", "gruposTimeZone": "", "intervaloMinimo": 0}'`)
+    fetch(`${this.state.endpoint_URL}?libCatraca={ "nsLeitor": "", "nsPlc": "", "semComando": false, "usuarioNome": ${this.state.nomeDaPessoa}, "usuarioId": "", "convidado": false, "dispositivoIdentificacao": "", "texto": "", "msgRecepcao": ${this.state.motivo}, "sentidoHorarioLiberado": true, "sentidoAntiHorarioLiberado": true, "liberacaoTempo": 10000, "grupoCatracas": ${this.state.grupo}, "nomeCatraca": ${this.state.nomeDoDispositivoLiberaManual}, "motivoLiberacaoManual": "{\"liberadoPara\":\"${this.state.nomeDaPessoa}\",\"motivo\": ${this.state.motivo}}", "qtdAcessosPorDia": 0, "temTimeZones": false, "msgBloqueioTimeZone": "", "gruposTimeZone": "", "intervaloMinimo": 0}'`)
       .then(primeiroRes => primeiroRes.json())
       .then(res => {
         console.log(res)
@@ -258,12 +274,15 @@ class App extends React.Component {
                   data,
                   serverResponse: data.liberaCatracaComando
                     ? JSON.parse(data.liberaCatracaComando)
-                    : ""
+                    : null
                 },
                 () => {
+                  if (!this.state.serverResponse) return null;
+
                   config.forEach(configuracao => {
                     this.renderizarTela(configuracao)
                   })
+
                   this.setState({ lastId: r.result })
                 }
               )
@@ -360,25 +379,27 @@ class App extends React.Component {
                           {screenConfig.texto}
                         </div>
 
-                        {!screenConfig.autorizado && screenConfig.nomeDaPessoa && (
-                          <button
-                            onClick={() =>
-                              this.autorizacaoSemModal(
-                                screenConfig.endpoint_lib_identificada
-                              )
-                            }
-                            className="access-control__button"
-                            style={{
-                              border: `1px solid ${screenConfig.corDaBorda}`,
-                              fontSize: screenConfig.tamanhoDaFonte,
-                              padding:
-                                numberOfScreens == 4 ? "1.3vh 4vw" : "1.3vh 5%",
-                              width: '100%'
-                            }}
-                          >
-                            LIBERAR
+                        {!screenConfig.autorizado &&
+                          !screenConfig.esconderBotao &&
+                          screenConfig.nomeDaPessoa && (
+                            <button
+                              onClick={() =>
+                                this.autorizacaoSemModal(
+                                  screenConfig.endpoint_lib_identificada
+                                )
+                              }
+                              className="access-control__button"
+                              style={{
+                                border: `1px solid ${screenConfig.corDaBorda}`,
+                                fontSize: screenConfig.tamanhoDaFonte,
+                                padding:
+                                  numberOfScreens == 4 ? "1.3vh 4vw" : "1.3vh 5%",
+                                width: '100%'
+                              }}
+                            >
+                              LIBERAR
                           </button>
-                        )}
+                          )}
                       </div>
                     </div>
 
@@ -413,7 +434,8 @@ class App extends React.Component {
                 onClick={() => {
                   this.setState({
                     endpoint_URL: configuracao.endpoint,
-                    filtroLiberaManual: configuracao.filtro
+                    nomeDoDispositivoLiberaManual: configuracao.nomeDoDispositivo,
+                    grupo: configuracao.grupo,
                   })
                   this.abrirModal()
                 }}
