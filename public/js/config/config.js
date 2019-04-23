@@ -3,7 +3,7 @@
 // Configurações para conectar-se ao servidor.
 hostnameDoServidor = 'localhost' // NÃO COLOCAR A "/" NO FINAL!
 portaDoServidor = 810 // NÃO COLOCAR OS ":" NO COMEÇO!
-enderecoDoCliente = 'http://enderecodocliente.com/?usuarioId=XXX'
+enderecoDoCliente = 'http://enderecodocliente.com/@usuarioId'
 
 // Adicione aqui todos os motivos de liberação
 // que devem ser exibidos na hora de liberar manualmente.
@@ -15,22 +15,26 @@ configuracoesStatusBar = [
   {
     titulo: "Liberar Catrata 1",
     endpoint: "http://localhost:810/metodos/liberaCatraca",
-    filtro: 'catraca1'
+    nomeDoDispositivo: 'catraca1',
+    grupo: 'catraca1'
   },
   {
     titulo: "Autorizar Catrata 47",
     endpoint: "http://localhost:810/metodos/liberaCatraca",
-    filtro: 'catraca1'
+    nomeDoDispositivo: 'catraca1',
+    grupo: 'catraca1'
   },
   {
     titulo: "Liberar Catrata 131",
     endpoint: "http://localhost:810/metodos/liberaCatraca",
-    filtro: 'catraca1'
+    nomeDoDispositivo: 'catraca1',
+    grupo: 'catraca1'
   },
   {
     titulo: "Liberar Catraca 2",
     endpoint: "http://localhost:810/metodos/liberaCatraca",
-    filtro: 'catraca1'
+    nomeDoDispositivo: 'catraca1',
+    grupo: 'catraca1'
   }
 ]
 
@@ -47,7 +51,8 @@ config = [
     corSucesso: 'green',
     corFracasso: 'red',
     filtro: ['catraca1'],
-    endpoint_lib_identificada: 'http://localhost:810/metodos/liberaCatraca'
+    endpoint_lib_identificada: 'http://localhost:810/metodos/liberaCatraca',
+    tempoParaBotaoDesaparecer: 3000
   },
   {
     titulo: "Catraca Emergencial",
@@ -58,6 +63,7 @@ config = [
     corSucesso: 'green',
     corFracasso: 'red',
     filtro: ['catraca1', 'catraca2'],
-    endpoint_lib_identificada: 'http://localhost:810/metodos/liberaCatraca'
+    endpoint_lib_identificada: 'http://localhost:810/metodos/liberaCatraca',
+    tempoParaBotaoDesaparecer: 3000
   },
 ]
